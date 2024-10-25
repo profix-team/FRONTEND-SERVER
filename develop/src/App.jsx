@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Vue의 <script setup>과 비슷한 역할을 하는 import 구문
+import { useState } from 'react';
 
+// Vue의 <template> 영역에 해당하는 부분이 함수의 return 값으로 들어갑니다
 function App() {
-  const [count, setCount] = useState(0)
+    // const [변수, 변경함수] = useState(초기값)
+    // Vue의 data() { return { count: 0 } } 와 비슷한 역할
+    const [count, setCount] = useState(0);
+    const [name, setName] = useState('홍길동');
+    const [isVisible, setIsVisible] = useState(true);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    // Vue의 methods와 비슷한 역할
+    const increaseCount = () => {
+        setCount(count + 1);
+    };
+
+    // Vue의 template 영역을 대체
+    return (
+        <div>
+            <p>카운트: {count}</p>
+            <p>이름: {name}</p>
+            <button onClick={increaseCount}>count is {count}</button>
+            <button onClick={() => setName('이순신')}>이름은 {name}</button>
+            <button onClick={() => setIsVisible(!isVisible)}>{isVisible ? '숨기기' : '보이기'}</button>
+        </div>
+    );
 }
 
-export default App
+export default App;
