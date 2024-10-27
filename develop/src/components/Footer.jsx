@@ -33,7 +33,7 @@ const Footer = () => {
                             <span className="border-b-2 border-white pb-2">Contact</span>
                         </h3>
                         <div className="space-y-3">
-                            <p>Email: support1@propix.com</p>
+                            <p>Email: support1@propix.team</p>
                             <p>Tel: 054-820-5911</p>
                         </div>
                     </div>

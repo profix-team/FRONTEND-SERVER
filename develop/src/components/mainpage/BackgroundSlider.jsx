@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 const BackgroundSlider = () => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [currentImageIndex, setCurrentImageIndex] = useState(() => {
+        // 컴포넌트 마운트 시 0-3 사이의 랜덤한 정수를 초기값으로 설정
+        return Math.floor(Math.random() * 4);
+    });
 
     const images = ['/slider_1.jpg', '/slider_2.jpg', '/slider_3.jpg', '/slider_4.jpg'];
 

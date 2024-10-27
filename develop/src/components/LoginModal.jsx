@@ -1,7 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const LoginModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
+    const { login, register } = useAuth();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirmPassword: '',
+        name: '',
+        rememberMe: false,
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (activeTab === 'login') {
+            const success = await login(formData.email, formData.password);
+            if (success) {
+                onClose();
+            }
+        } else {
+            if (formData.password !== formData.confirmPassword) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+            const success = await register(formData.email, formData.password, formData.name);
+            if (success) {
+                onClose();
+            }
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value,
+        }));
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -34,7 +72,6 @@ const LoginModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                         <AnimatePresence mode="wait">
                             <motion.div key={activeTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                                 {activeTab === 'login' ? (
-                                    // 로그인 폼 내용
                                     <div className="space-y-4">
                                         {/* 소셜 로그인 버튼 */}
                                         <div className="space-y-3">
@@ -58,20 +95,28 @@ const LoginModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                                             </div>
                                         </div>
 
-                                        {/* 기존 로그인 폼 */}
-                                        <form className="space-y-4">
+                                        {/* 로그인 폼 */}
+                                        <form onSubmit={handleSubmit} className="space-y-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                                                <input type="email" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이메일을 입력하세요." />
+                                                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이메일을 입력하세요." required />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
-                                                <input type="password" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="비밀번호를 입력하세요." />
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]"
+                                                    placeholder="비밀번호를 입력하세요."
+                                                    required
+                                                />
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center">
-                                                    <input type="checkbox" id="remember-me" className="h-4 w-4 text-[#75E593] focus:ring-[#75E593] border-gray-300 rounded" />
-                                                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                                                    <input type="checkbox" id="rememberMe" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} className="h-4 w-4 text-[#75E593] focus:ring-[#75E593] border-gray-300 rounded" />
+                                                    <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                                                         로그인 상태 유지
                                                     </label>
                                                 </div>
@@ -85,7 +130,6 @@ const LoginModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                                         </form>
                                     </div>
                                 ) : (
-                                    // 회원가입 폼 내용
                                     <div className="space-y-4">
                                         {/* 소셜 회원가입 버튼 */}
                                         <div className="space-y-3">
@@ -109,26 +153,42 @@ const LoginModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                                             </div>
                                         </div>
 
-                                        {/* 기존 회원가입 폼 */}
-                                        <form className="space-y-4">
+                                        {/* 회원가입 폼 */}
+                                        <form onSubmit={handleSubmit} className="space-y-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                                                <input type="email" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이메일을 입력하세요." />
+                                                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이메일을 입력하세요." required />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
-                                                <input type="password" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="비밀번호를 입력하세요." />
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]"
+                                                    placeholder="비밀번호를 입력하세요."
+                                                    required
+                                                />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호 확인</label>
-                                                <input type="password" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="비밀번호를 다시 입력하세요." />
+                                                <input
+                                                    type="password"
+                                                    name="confirmPassword"
+                                                    value={formData.confirmPassword}
+                                                    onChange={handleChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]"
+                                                    placeholder="비밀번호를 다시 입력하세요."
+                                                    required
+                                                />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
-                                                <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이름을 입력하세요." />
+                                                <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75E593]" placeholder="이름을 입력하세요." required />
                                             </div>
                                             <div className="flex items-center">
-                                                <input type="checkbox" id="agree-terms" className="h-4 w-4 text-[#75E593] focus:ring-[#75E593] border-gray-300 rounded" />
+                                                <input type="checkbox" id="agree-terms" name="agreeTerms" onChange={handleChange} className="h-4 w-4 text-[#75E593] focus:ring-[#75E593] border-gray-300 rounded" required />
                                                 <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-700">
                                                     이용약관 및 개인정보처리방침에 동의합니다.
                                                 </label>

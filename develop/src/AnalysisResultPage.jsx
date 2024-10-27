@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Download, Share2, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-import BackgroundSlider from './components/mainpage/BackgroundSlider';
+import LoginModal from './components/LoginModal';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Button from './components/Button';
 
 const AnalysisResultPage = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('login');
 
     // 예시 데이터
     const analysisResult = {
@@ -23,14 +27,63 @@ const AnalysisResultPage = () => {
         },
     };
 
-    return (
-        <div className="min-h-screen bg-transparent" style={{ fontFamily: 'IBM Plex Sans KR, sans-serif' }}>
-            <BackgroundSlider />
-            <Header />
+    useEffect(() => {
+        // 페이지 진입 시 로딩 상태를 true로 설정
+        setIsLoading(true);
 
-            <main className="max-w-7xl mx-auto px-4 py-8">
+        // 일정 시간 후 로딩 상태를 false로 변경
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    // 애니메이션 variants 정의
+    const containerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                when: 'beforeChildren',
+                staggerChildren: 0.2,
+            },
+        },
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4 },
+        },
+    };
+
+    return (
+        <div className="min-h-screen bg-transparent relative" style={{ fontFamily: 'IBM Plex Sans KR, sans-serif' }}>
+            {/* Static Background with Overlay */}
+            <div
+                className="fixed top-0 left-0 w-full h-screen -z-10"
+                style={{
+                    backgroundImage: 'url(/origin_1.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.9) 100%)',
+                    }}
+                />
+            </div>
+            <Header setIsLoginModalOpen={setIsLoginModalOpen} />
+            <motion.main initial="hidden" animate="visible" variants={containerVariants} className="max-w-7xl mx-auto px-4 py-8">
                 {/* 뒤로가기 및 액션 버튼 */}
-                <div className="flex justify-between items-center mb-8">
+                <motion.div variants={itemVariants} className="flex justify-between items-center mb-8">
                     <Button onClick={() => navigate(-1)} className="flex items-center">
                         <ChevronLeft className="w-5 h-5 mr-1" />
                         돌아가기
@@ -45,10 +98,10 @@ const AnalysisResultPage = () => {
                             공유하기
                         </button>
                     </div>
-                </div>
+                </motion.div>
 
-                {/* 분석 결과 경고 메시지 - 수정된 부분 */}
-                <div className={`mb-8 p-6 rounded-lg ${analysisResult.isDistorted ? 'bg-red-50 border-2 border-red-200' : 'bg-green-50 border-2 border-[#75E593]'}`}>
+                {/* 분석 결과 경고 메시지 */}
+                <motion.div variants={itemVariants} className={`mb-8 p-6 rounded-lg ${analysisResult.isDistorted ? 'bg-red-50 border-2 border-red-200' : 'bg-green-50 border-2 border-[#75E593]'}`}>
                     <h2 className={`text-3xl font-semibold mb-2 ${analysisResult.isDistorted ? 'text-red-600' : 'text-[#75E593]'}`}>{analysisResult.isDistorted ? '⚠️ 왜곡이 감지되었습니다!' : '✅ 안전한 매물입니다'}</h2>
                     <p className="text-xl">
                         {analysisResult.isDistorted ? (
@@ -58,11 +111,11 @@ const AnalysisResultPage = () => {
                         ) : (
                             '이 매물 이미지는 신뢰할 수 있는 수준의 왜곡률을 보입니다.'
                         )}
-                    </p>{' '}
-                </div>
+                    </p>
+                </motion.div>
 
                 {/* 이미지 비교 섹션 */}
-                <div className="grid grid-cols-2 gap-8 mb-12">
+                <motion.div variants={itemVariants} className="grid grid-cols-2 gap-8 mb-12">
                     <div className="bg-white rounded-lg overflow-hidden shadow-lg">
                         <div className="relative pb-[66.67%]">
                             <img src="/origin_1.jpg" alt="원본 이미지" className="absolute inset-0 w-full h-full object-cover" />
@@ -81,10 +134,10 @@ const AnalysisResultPage = () => {
                             <p className="text-gray-600">AI가 보정한 실제 모습</p>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* 분석 이미지 결과 */}
-                <div className="bg-white p-6 shadow-lg mb-8">
+                <motion.div variants={itemVariants} className="bg-white p-6 shadow-lg mb-8">
                     <h3 className="text-xl font-semibold mb-6">상세 분석 결과</h3>
                     <div className="flex mb-6">
                         <div className="flex-1">
@@ -123,10 +176,10 @@ const AnalysisResultPage = () => {
                             </p>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* 파라미터와 신뢰도를 수평으로 배치 */}
-                <div className="grid grid-cols-2 gap-8">
+                <motion.div variants={itemVariants} className="grid grid-cols-2 gap-8">
                     {/* 카메라 파라미터 */}
                     <div className="bg-white rounded-lg p-6 shadow-lg">
                         <h3 className="text-xl font-semibold mb-4">예상 카메라 파라미터 (Pred, Estimated Parameter)</h3>
@@ -202,15 +255,22 @@ const AnalysisResultPage = () => {
                                     <span className="text-xs font-semibold inline-block text-[#75E593]">{(analysisResult.cameraParams.confidence * 100).toFixed(1)}%</span>
                                 </div>
                             </div>
-                            <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-[#75E593] bg-opacity-10">
-                                <div style={{ width: `${analysisResult.cameraParams.confidence * 100}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[#75E593]"></div>
-                            </div>
+                            <motion.div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-[#75E593] bg-opacity-10" initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 0.8, delay: 0.5 }}>
+                                <motion.div
+                                    style={{ width: `${analysisResult.cameraParams.confidence * 100}%` }}
+                                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[#75E593]"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${analysisResult.cameraParams.confidence * 100}%` }}
+                                    transition={{ duration: 1, delay: 0.8 }}
+                                ></motion.div>
+                            </motion.div>
                         </div>
                     </div>
-                </div>
-            </main>
-
+                </motion.div>
+            </motion.main>
             <Footer />
+            {/* Login Modal */}
+            <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} activeTab={activeTab} setActiveTab={setActiveTab} />{' '}
         </div>
     );
 };

@@ -3,6 +3,7 @@ import { Upload, Camera, ChevronDown, User } from 'lucide-react';
 
 import HeroSection from './components/mainpage/HeroSection';
 import BackgroundSlider from './components/mainpage/BackgroundSlider';
+import ImageUpload from './components/ImageUpload';
 
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -16,25 +17,25 @@ const MainPage = () => {
         {
             number: 1,
             title: '이미지 업로드',
-            description: '분석하고 싶은 매물 사진을 업로드하세요',
+            description: '분석하고 싶은 매물 사진을 업로드하세요.',
             emoji: '📸',
         },
         {
             number: 2,
             title: 'AI 분석',
-            description: 'AI가 이미지 왜곡 여부를 분석합니다',
+            description: 'AI가 이미지 왜곡 여부를 분석합니다.',
             emoji: '🤖',
         },
         {
             number: 3,
             title: '결과 확인',
-            description: '분석 결과와 상세 정보를 확인하세요',
+            description: '분석 결과와 상세 정보를 확인하세요.',
             emoji: '✨',
         },
         {
             number: 4,
             title: '보고서 저장',
-            description: '분석 결과를 저장하고 공유할 수 있습니다',
+            description: '분석 결과를 저장하고 공유할 수 있습니다.',
             emoji: '💾',
         },
     ];
@@ -71,15 +72,7 @@ const MainPage = () => {
                 <HeroSection />
 
                 {/* Upload Section */}
-                <div className="mt-12 max-w-2xl mx-auto">
-                    <div className="border-2 border-dashed rounded-lg p-12 text-center bg-white bg-opacity-90" style={{ borderColor: '#75E593' }}>
-                        <Upload className="mx-auto h-12 w-12" style={{ color: '#75E593' }} />
-                        <p className="mt-4 text-lg text-gray-600">이미지를 드래그하여 업로드하거나 클릭하여 선택하세요</p>
-                        <button className="mt-6 px-6 py-3 text-white rounded-lg" style={{ backgroundColor: '#75E593' }}>
-                            이미지 선택하기
-                        </button>
-                    </div>
-                </div>
+                <ImageUpload />
 
                 {/* Tutorial Section */}
                 <div className="mt-24">
