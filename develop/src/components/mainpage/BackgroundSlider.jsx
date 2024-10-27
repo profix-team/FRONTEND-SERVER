@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const BackgroundSlider = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const images = ['/api/placeholder/1920/1080', '/api/placeholder/1920/1080', '/api/placeholder/1920/1080', '/api/placeholder/1920/1080'];
+    const images = ['/slider_1.jpg', '/slider_2.jpg', '/slider_3.jpg', '/slider_4.jpg'];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,12 +23,17 @@ const BackgroundSlider = () => {
                         backgroundImage: `url(${image})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        opacity: currentImageIndex === index ? 0.15 : 0,
+                        opacity: currentImageIndex === index ? 1 : 0,
                         transform: `translateX(${(index - currentImageIndex) * 100}%)`,
                     }}
                 />
             ))}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white to-white" />
+            <div
+                className="absolute inset-0"
+                style={{
+                    background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.9) 100%)',
+                }}
+            />
         </div>
     );
 };

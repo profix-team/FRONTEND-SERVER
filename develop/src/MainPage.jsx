@@ -1,42 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Camera, ChevronDown, User } from 'lucide-react';
+
 import HeroSection from './components/mainpage/HeroSection';
+import BackgroundSlider from './components/mainpage/BackgroundSlider';
+
 import Footer from './components/Footer';
 import Header from './components/Header';
 import LoginModal from './components/LoginModal';
-
-const BackgroundSlider = () => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    const images = ['/api/placeholder/1920/1080', '/api/placeholder/1920/1080', '/api/placeholder/1920/1080', '/api/placeholder/1920/1080'];
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % images.length);
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    return (
-        <div className="fixed top-0 left-0 w-full h-screen -z-10 overflow-hidden">
-            {images.map((image, index) => (
-                <div
-                    key={index}
-                    className="absolute top-0 left-0 w-full h-full transition-all duration-1000 ease-in-out"
-                    style={{
-                        backgroundImage: `url(${image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        opacity: currentImageIndex === index ? 0.15 : 0,
-                        transform: `translateX(${(index - currentImageIndex) * 100}%)`,
-                    }}
-                />
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white to-white" />
-        </div>
-    );
-};
 
 const MainPage = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -137,7 +107,7 @@ const MainPage = () => {
                         <div className="flex-1 max-w-xl">
                             <div className="bg-white bg-opacity-90 rounded-lg overflow-hidden shadow-lg">
                                 <div className="relative pb-[66.67%]">
-                                    <img src="/api/placeholder/800/600" alt="왜곡된 이미지" className="absolute inset-0 w-full h-full object-cover" />
+                                    <img src="/origin_1.jpg" alt="왜곡된 이미지" className="absolute inset-0 w-full h-full object-cover" />
                                 </div>
                                 <div className="p-4">
                                     <h3 className="font-semibold text-lg mb-2">왜곡된 원본 이미지</h3>
@@ -148,7 +118,7 @@ const MainPage = () => {
                         <div className="flex-1 max-w-xl">
                             <div className="bg-white bg-opacity-90 rounded-lg overflow-hidden shadow-lg">
                                 <div className="relative pb-[66.67%]">
-                                    <img src="/api/placeholder/800/600" alt="보정된 이미지" className="absolute inset-0 w-full h-full object-cover" />
+                                    <img src="/origin_2.jpg" alt="보정된 이미지" className="absolute inset-0 w-full h-full object-cover" />
                                 </div>
                                 <div className="p-4">
                                     <h3 className="font-semibold text-lg mb-2">AI 보정 이미지</h3>

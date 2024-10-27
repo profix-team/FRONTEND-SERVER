@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .text-stroke-propix {
+        -webkit-text-stroke: 0.5px #75e593;
+        text-stroke: 0.5px #75e593;
+        color: white;
+    }
+}
