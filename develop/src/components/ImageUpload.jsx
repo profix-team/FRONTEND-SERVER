@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx'; // useAuth import 추가
 import Button from './Button';
 
-const ImageUpload = () => {
+const ImageUpload = ({ setIsLoginModalOpen }) => {
+    // props 추가
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -12,10 +14,19 @@ const ImageUpload = () => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
+    const { user, showToast } = useAuth(); // useAuth hook 사용
 
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (!user) {
+                // 로그인하지 않은 경우
+                event.target.value = null; // 파일 선택 초기화
+                showToast('로그인 후 이용해주세요.', 'error');
+                setIsLoginModalOpen(true);
+                return;
+            }
+
             if (file.type.startsWith('image/')) {
                 setSelectedFile(file);
                 const reader = new FileReader();
@@ -33,6 +44,14 @@ const ImageUpload = () => {
     const handleDrop = (event) => {
         event.preventDefault();
         const file = event.dataTransfer.files[0];
+
+        if (!user) {
+            // 로그인하지 않은 경우
+            showToast('로그인 후 이용해주세요.', 'error');
+            setIsLoginModalOpen(true);
+            return;
+        }
+
         if (file && file.type.startsWith('image/')) {
             setSelectedFile(file);
             const reader = new FileReader();
@@ -137,8 +156,8 @@ const ImageUpload = () => {
     };
 
     return (
-        <div className="mt-12 max-w-2xl mx-auto">
-            <div className="border-2 border-dashed rounded-lg p-8 text-center bg-white bg-opacity-90" style={{ borderColor: '#75E593' }} onDrop={handleDrop} onDragOver={handleDragOver}>
+        <div className="mt-12 max-w-4xl mx-auto">
+            <div className="border-2 border-dashed rounded-lg p-20 text-center bg-white bg-opacity-90" style={{ borderColor: '#75E593' }} onDrop={handleDrop} onDragOver={handleDragOver}>
                 {!selectedFile ? (
                     <>
                         <Upload className="mx-auto h-12 w-12" style={{ color: '#75E593' }} />

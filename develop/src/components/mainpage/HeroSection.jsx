@@ -14,7 +14,7 @@ const HeroSection = () => {
         },
         {
             title: '방방곡곡 숨어있는 왜곡사진',
-            description: '저희 AI가 다 찾아드립니다! 진짜 우리집 미리보기',
+            description: 'AI가 다 찾아드립니다! 진짜 우리집 미리보기',
         },
         {
             title: '넓어 보이는건 카메라 빨이었습니다...',
@@ -33,8 +33,8 @@ const HeroSection = () => {
 
     return (
         <div className="text-center">
-            <h1 className="text-5xl font-bold text-stroke-propix mb-4">{headlines[currentHeadline].title}</h1>
-            <p className="text-2xl text-black-500 font-bold mb-8">{headlines[currentHeadline].description}</p>
+            <h1 className="text-5xl font-bold text-black-400 mb-4">{headlines[currentHeadline].title}</h1>
+            <p className="text-2xl text-gray-600 font-semibold mb-8">{headlines[currentHeadline].description}</p>
         </div>
     );
 };

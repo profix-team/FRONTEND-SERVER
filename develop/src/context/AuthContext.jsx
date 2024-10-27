@@ -8,6 +8,7 @@ const AuthContext = createContext({
     register: () => Promise.resolve(),
     loading: true,
     toast: { show: false, message: '', type: '' },
+    showToast: () => {}, // 이 줄 추가
 });
 
 export const AuthProvider = ({ children }) => {
@@ -27,11 +28,28 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const showToast = (message, type = 'success') => {
-        setToast({ show: true, message, type });
+        // 이미 보여지고 있는 토스트가 있다면 제거
+        setToast({ show: false, message: '', type: '' });
+
+        // 약간의 딜레이 후 새 토스트 표시
+        setTimeout(() => {
+            setToast({ show: true, message, type });
+        }, 100);
+
+        // 토스트 자동 제거
         setTimeout(() => {
             setToast({ show: false, message: '', type: '' });
         }, 3000);
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            setUser(userData);
+        }
+        setLoading(false);
+    }, []);
 
     const login = async (email, password) => {
         try {
@@ -95,7 +113,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
         setUser(null);
-        showToast('로그아웃되었습니다.');
+        showToast('로그아웃 되었습니다.');
     };
 
     const value = {
@@ -105,6 +123,7 @@ export const AuthProvider = ({ children }) => {
         register,
         loading,
         toast,
+        showToast,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -72,7 +72,7 @@ const MainPage = () => {
                 <HeroSection />
 
                 {/* Upload Section */}
-                <ImageUpload />
+                <ImageUpload setIsLoginModalOpen={setIsLoginModalOpen} />
 
                 {/* Tutorial Section */}
                 <div className="mt-24">
