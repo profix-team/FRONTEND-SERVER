@@ -33,8 +33,8 @@ const HeroSection = () => {
 
     return (
         <div className="text-center">
-            <h1 className="text-5xl font-bold text-black-400 mb-4">{headlines[currentHeadline].title}</h1>
-            <p className="text-2xl text-gray-600 font-semibold mb-8">{headlines[currentHeadline].description}</p>
+            <h1 className="text-5xl font-bold text-black-400 mb-4 mt-14">{headlines[currentHeadline].title}</h1>
+            <p className="text-2xl text-gray-600 font-semibold mb-20">{headlines[currentHeadline].description}</p>
         </div>
     );
 };

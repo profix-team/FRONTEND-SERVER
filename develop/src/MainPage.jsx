@@ -67,7 +67,7 @@ const MainPage = () => {
             <Header setIsLoginModalOpen={setIsLoginModalOpen} />
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 py-16">
+            <div className="max-w-7xl mx-auto px-4 py-24">
                 {/* Hero Section */}
                 <HeroSection />
 
