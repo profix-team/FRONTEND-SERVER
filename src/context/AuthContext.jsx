@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }) => {
                 }
                 setCookies(data.accessToken, data.refreshToken);
                 setUser(data.resultData);
-                showToast(`환영합니다, ${data.resultData.member_name}님!`);
+                showToast(`환영합니다, ${data.resultData.name}님!`);
                 return true;
             } else {
                 throw new Error(data.resultMsg || '로그인에 실패했습니다.');
@@ -228,7 +228,8 @@ export const AuthProvider = ({ children }) => {
 
     const setUserInfo = (userInfo) => {
         setUser(userInfo);
-        showToast(`환영합니다, ${userInfo.member_name}님!`);
+        // member_name이 아닌 name으로 변경해야 함
+        showToast(`환영합니다, ${userInfo.name}님!`);
     };
 
     const value = {
