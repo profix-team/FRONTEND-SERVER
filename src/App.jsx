@@ -4,19 +4,21 @@ import Toast from './components/Toast.jsx';
 import Study from './Study';
 import MainPage from './MainPage';
 import AnalysisResultPage from './AnalysisResultPage';
+import OAuthCallback from './components/OAuthCallback';
 
 function App() {
     return (
-        <AuthProvider>
-            <BrowserRouter>
+        <BrowserRouter>
+            <AuthProvider>
                 <Routes>
                     <Route path="/study" element={<Study />} />
                     <Route path="/" element={<MainPage />} />
                     <Route path="/analysis" element={<AnalysisResultPage />} />
+                    <Route path="/oauth" element={<OAuthCallback />} />
                 </Routes>
                 <Toast />
-            </BrowserRouter>
-        </AuthProvider>
+            </AuthProvider>
+        </BrowserRouter>
     );
 }
 
