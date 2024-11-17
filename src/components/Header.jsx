@@ -15,14 +15,14 @@ const Header = ({ setIsLoginModalOpen }) => {
                     <span className="text-xl font-bold text-gray-800">Propix</span>
                 </Link>
                 <div className="flex space-x-4 items-center">
-                    <Link to="/analysis" className="px-4 py-2 text-gray-600 hover:text-gray-800">
+                    <Link to="/analysis" className="px-4  py-2 text-gray-600 hover:text-gray-800">
                         서비스 소개
                     </Link>
                     <button className="px-4 py-2 text-gray-600 hover:text-gray-800">이용방법</button>
 
                     {user ? (
                         <div className="flex items-center space-x-4">
-                            <span className="text-gray-600">{user.name}님</span>
+                            <span className="text-gray-600">{user.member_nickname || user.member_name || user.member_email}님</span>
                             <button onClick={logout} className="flex items-center space-x-1 text-gray-600 hover:text-gray-800">
                                 <LogOut className="h-5 w-5" />
                             </button>

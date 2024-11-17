@@ -20,24 +20,37 @@ const ImageUpload = ({ setIsLoginModalOpen }) => {
         const file = event.target.files[0];
         if (file) {
             if (!user) {
-                // 로그인하지 않은 경우
-                event.target.value = null; // 파일 선택 초기화
+                event.target.value = null;
                 showToast('로그인 후 이용해주세요.', 'error');
                 setIsLoginModalOpen(true);
                 return;
             }
 
-            if (file.type.startsWith('image/')) {
-                setSelectedFile(file);
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setPreview(reader.result);
-                };
-                reader.readAsDataURL(file);
-                handleUpload(file);
-            } else {
-                alert('이미지 파일만 업로드 가능합니다.');
+            // 파일 크기 제한 추가 (20MB)
+            if (file.size > 20 * 1024 * 1024) {
+                event.target.value = null;
+                showToast('파일 크기는 20MB를 초과할 수 없습니다.', 'error');
+                return;
             }
+
+            // 파일 형식 체크
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/heic'];
+            if (!allowedTypes.includes(file.type)) {
+                event.target.value = null;
+                showToast('지원하지 않는 파일 형식입니다. (JPG, PNG, HEIC만 가능)', 'error');
+                return;
+            }
+
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result);
+            };
+            reader.onerror = () => {
+                showToast('파일을 읽는 중 오류가 발생했습니다.', 'error');
+            };
+            reader.readAsDataURL(file);
+            handleUpload(file);
         }
     };
 
