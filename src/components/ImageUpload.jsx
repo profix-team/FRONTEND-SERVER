@@ -3,6 +3,7 @@ import { Upload, X, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx'; // useAuth import 추가
 import Button from './Button';
+import axios from 'axios'; // 이 줄 추가
 
 const ImageUpload = ({ setIsLoginModalOpen }) => {
     // props 추가
@@ -45,12 +46,15 @@ const ImageUpload = ({ setIsLoginModalOpen }) => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
+                // 원본 이미지 URL을 로컬 스토리지에 저장
+                localStorage.setItem('originalImage', reader.result);
+                // 파일 선택 후 바로 업로드 시작
+                handleUpload(file);
             };
             reader.onerror = () => {
                 showToast('파일을 읽는 중 오류가 발생했습니다.', 'error');
             };
             reader.readAsDataURL(file);
-            handleUpload(file);
         }
     };
 
@@ -86,28 +90,38 @@ const ImageUpload = ({ setIsLoginModalOpen }) => {
         setIsUploading(true);
         setUploadProgress(0);
 
-        // TODO: 실제 업로드 API 구현
-        // 1. 이미지 업로드 API
-        // const formData = new FormData();
-        // formData.append('image', file);
-        // const uploadResponse = await fetch('/api/upload', {
-        //     method: 'POST',
-        //     body: formData,
-        //     onUploadProgress: (progressEvent) => {
-        //         const progress = (progressEvent.loaded / progressEvent.total) * 100;
-        //         setUploadProgress(progress);
-        //     }
-        // });
-        // const { imageId } = await uploadResponse.json();
+        const formData = new FormData();
+        formData.append('file', file);
 
-        // 업로드 프로세스 시뮬레이션
-        for (let i = 0; i <= 100; i += 5) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            setUploadProgress(i);
+        try {
+            // 업로드 진행률 표시를 위한 설정
+            const config = {
+                params: {
+                    normalize: true,
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                    setUploadProgress(progress);
+                },
+            };
+
+            const response = await axios.post('http://211.185.105.167:8082/calibrate', formData, config);
+            console.log('Response:', response.data);
+
+            // 분석 결과를 로컬 스토리지에 저장
+            localStorage.setItem('analysisResult', JSON.stringify(response.data));
+
+            setIsUploading(false);
+            navigate('/analysis'); // 분석 결과 페이지로 이동
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('이미지 업로드에 실패했습니다.', 'error');
+            setIsUploading(false);
+            handleReset();
         }
-
-        setIsUploading(false);
-        await startAnalysis();
     };
 
     const startAnalysis = async () => {

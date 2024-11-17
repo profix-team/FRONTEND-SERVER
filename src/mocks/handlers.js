@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const USE_MSW = import.meta.env.VITE_USE_MSW === 'true';
+const USE_MSW = import.meta.env.VITE_USE_MSW === 'false';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 export const handlers = [

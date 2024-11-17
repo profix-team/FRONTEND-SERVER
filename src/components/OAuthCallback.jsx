@@ -26,28 +26,46 @@ const OAuthCallback = () => {
                     throw new Error('로그인 정보를 받아오지 못했습니다.');
                 }
 
+                console.log('Received tokens:', { accessToken, refreshToken }); // 토큰 확인용 로그
+
                 setCookies(accessToken, refreshToken);
-                const response = await fetch('http://localhost:8080/auth/user', {
+                const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
+                console.log('Sending request to:', `${API_BASE_URL}/auth/user`);
+                console.log('With headers:', {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                });
+
+                const response = await fetch(`${API_BASE_URL}/auth/user`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+
+                if (!response.ok) {
+                    console.error('User info fetch failed:', response.status);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                console.log('User data response:', data);
+
                 if (!isSubscribed) return;
 
                 if (data.statusCode === '200') {
                     setUserInfo(data.resultData);
                     showToast('카카오 로그인이 완료되었습니다.');
                     navigate('/');
-                } else {
-                    throw new Error('로그인에 실패했습니다.');
                 }
             } catch (error) {
                 console.error('OAuth 콜백 처리 실패:', error);
                 showToast(error.message, 'error');
-                // 에러 발생시 로그인 페이지로 리다이렉트
                 setTimeout(() => {
                     if (isSubscribed) {
                         navigate('/login');
