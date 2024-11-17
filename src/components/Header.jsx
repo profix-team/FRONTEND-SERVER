@@ -22,7 +22,7 @@ const Header = ({ setIsLoginModalOpen }) => {
 
                     {user ? (
                         <div className="flex items-center space-x-4">
-                            <span className="text-gray-600">{user.member_nickname || user.member_name || user.member_email}님</span>
+                            <span className="text-gray-600">{user.nickname || user.name || user.email}님</span>
                             <button onClick={logout} className="flex items-center space-x-1 text-gray-600 hover:text-gray-800">
                                 <LogOut className="h-5 w-5" />
                             </button>
